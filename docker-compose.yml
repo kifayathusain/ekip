@@ -1,0 +1,33 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ekip
+      POSTGRES_USER: ekip
+      POSTGRES_PASSWORD: ekip
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ekip -d ekip"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://ekip:ekip@db:5432/ekip
+      JWT_SECRET: change-me-in-production
+      LLM_PROVIDER: mock
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports: ["3000:3000"]
+    depends_on: [api]
+
+volumes:
+  pgdata:
