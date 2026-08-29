@@ -17,6 +17,10 @@ A production-oriented RAG platform built with Next.js, FastAPI, PostgreSQL/pgvec
 
 ## Run
 
+The backend targets Python 3.14.2. Docker Compose uses this version automatically;
+for local backend development, create the virtual environment with Python 3.14.2
+before installing `backend/requirements.txt`.
+
 ```bash
 docker compose up --build
 ```
